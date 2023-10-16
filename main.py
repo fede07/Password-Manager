@@ -1,5 +1,6 @@
 from tkinter import Tk, Button, Label, Canvas, PhotoImage, Entry, END, messagebox
 from random import choice, shuffle, randint
+from pyperclip import copy
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 def generate_password():
@@ -18,6 +19,8 @@ def generate_password():
     password =  ''.join(password_list)
 
     entry_password.insert(0, password)
+
+    copy(password)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
