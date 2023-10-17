@@ -39,6 +39,8 @@ def save():
 
     if is_ok:
 
+        data = None
+
         new_data = {
             website: {
                 "email": username,
@@ -46,8 +48,17 @@ def save():
             }
         }
 
-        with open(file="data.json", mode="a") as saved_data:
-            json.dump(new_data, saved_data, indent=4)
+        try:
+            with open(file="data.json", mode="r") as saved_data:
+                data = json.load(saved_data)
+                data.update(new_data)
+        except FileNotFoundError:
+            with open(file="data.json", mode="w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
+            with open(file="data.json", mode="w") as data_file:
+                json.dump(data, data_file, indent=4)
+
 
         entry_website.delete(first=0, last=END)
         entry_password.delete(first=0, last=END)
