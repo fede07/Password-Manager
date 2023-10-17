@@ -1,3 +1,4 @@
+import json
 from tkinter import Tk, Button, Label, Canvas, PhotoImage, Entry, END, messagebox
 from random import choice, shuffle, randint
 from pyperclip import copy
@@ -37,8 +38,16 @@ def save():
     is_ok = messagebox.askokcancel(title=website, message=f"Are these details correct?\nUsername: {username}\nPassword: {password}\n")
 
     if is_ok:
-        with open(file="data.txt", mode="a") as saved_data:
-            saved_data.write(f"{website}|{username}|{password}\n")
+
+        new_data = {
+            website: {
+                "email": username,
+                "password": password
+            }
+        }
+
+        with open(file="data.json", mode="a") as saved_data:
+            json.dump(new_data, saved_data, indent=4)
 
         entry_website.delete(first=0, last=END)
         entry_password.delete(first=0, last=END)
