@@ -62,6 +62,25 @@ def save():
 
         entry_website.delete(first=0, last=END)
         entry_password.delete(first=0, last=END)
+#-----------------------------SEARCH PASSWORD---------------------------#
+
+def search_password():
+
+    website = entry_website.get()
+    data = None
+
+    try:
+        with open(file="data.json", mode="r") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showwarning(title="Save file not found", message="No passwords have been saved yet!")      
+    else:
+        if website in data:
+            email=data[website]["email"]
+            password=data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Username: {email}\nPassword:{password}")
+        else:
+            messagebox.showinfo(title=website, message="Website not saved!")
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -84,8 +103,8 @@ label_password = Label(text="Password:")
 label_password.grid(column=0, row=3)
 
 #Entries
-entry_website = Entry(width=44)
-entry_website.grid(column=1, row=1, columnspan=2)
+entry_website = Entry(width=25)
+entry_website.grid(column=1, row=1)
 entry_website.focus()
 
 entry_username = Entry(width=44)
@@ -96,6 +115,10 @@ entry_password = Entry(width=26)
 entry_password.grid(column=1, row=3)
 
 #Buttons
+
+button_search = Button(text="Search", command=search_password)
+button_search.grid(column=2, row=1)
+
 button_generate_pass = Button(text="Generate Password", command=generate_password)
 button_generate_pass.grid(column=2, row=3)
 
