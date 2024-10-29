@@ -7,6 +7,7 @@ from UIStyle import UIStyle
 if __name__ == "__main__":
     window = Tk()
     window.title("Password Manager")
+    window.iconbitmap("assets/icon.ico")
     window.resizable(False, False)
     ui_style = UIStyle(window)
     
