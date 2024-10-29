@@ -1,3 +1,5 @@
 # Password-Manager
 
-![passwordManager](https://github.com/fede07/Password-Manager/assets/7377692/7dd19b01-fde3-4f9d-ae28-0c6045b84585)
+![PasswordManager](https://github.com/user-attachments/assets/4b8d5774-d9f0-4896-a3ce-2d7f06152ce5)
+
+![PasswordManagerOpen](https://github.com/user-attachments/assets/ad0c3794-d50d-443d-ab5e-ac7b93b710ee)
