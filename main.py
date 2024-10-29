@@ -16,8 +16,6 @@ def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
-    strenght = ["Weak", "Medium", "Strong", "Very Strong"]
-    strenght_colors = ["red", "orange", "green", "blue"]
     
     max_length = slider_password_lenght.get()
     password_list = []
@@ -38,21 +36,14 @@ def generate_password():
             password_list.append(choice(numbers))
         if use_symbols.get() == 1:
             password_list.append(choice(symbols))
+            
+    # Calcular la fortaleza de la contraseña
+    on_slider_change(max_length)
 
     # Limitar el tamaño total a max_length y mezclar los caracteres
     password_list = password_list[:max_length]
     shuffle(password_list)
     password = ''.join(password_list)
-    
-    # Evaluar la fortaleza de la contraseña generada
-    if len(password) < 8:
-        label_password_strength_value.config(text=strenght[0], fg=strenght_colors[0], font=("Arial", 10, "bold"))
-    elif len(password) < 10:
-        label_password_strength_value.config(text=strenght[1], fg=strenght_colors[1], font=("Arial", 10, "bold"))
-    elif len(password) < 12:
-        label_password_strength_value.config(text=strenght[2], fg=strenght_colors[2], font=("Arial", 10, "bold"))
-    else:
-        label_password_strength_value.config(text=strenght[3], fg=strenght_colors[3], font=("Arial", 10, "bold"))
 
     # Mostrar la contraseña en el campo de entrada
     entry_password.delete(first=0, last=END)
@@ -183,6 +174,21 @@ def toggle_options():
     else:
         toggle_button.config(text="More Options")
         
+# ------------------------- SLIDER METHODS ---------------------------- #
+
+def on_slider_change(value):
+    strenght = ["Weak", "Medium", "Strong", "Very Strong"]
+    strenght_colors = ["red", "orange", "green", "blue"]
+    if int(value) <= 6:
+        label_password_strength_value.config(text=strenght[0], fg=strenght_colors[0], font=("Arial", 10, "bold"))
+    elif int(value) <= 10:
+        label_password_strength_value.config(text=strenght[1], fg=strenght_colors[1], font=("Arial", 10, "bold"))
+    elif int(value) < 12:
+        label_password_strength_value.config(text=strenght[2], fg=strenght_colors[2], font=("Arial", 10, "bold"))
+    else:
+        label_password_strength_value.config(text=strenght[3], fg=strenght_colors[3], font=("Arial", 10, "bold"))
+        
+        
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -245,7 +251,7 @@ toggle_button.grid(column=2, row=4, sticky="W")
 
 #Sliders
 
-slider_password_lenght = Scale(from_=4, to=32, orient="horizontal", length=200, showvalue=8)
+slider_password_lenght = Scale(from_=4, to=32, orient="horizontal", length=200, showvalue=8, command=on_slider_change)
 slider_password_lenght.set(12)
 
 #CheckButtons
