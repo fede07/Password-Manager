@@ -1,7 +1,6 @@
 from tkinter import Button, Label, Canvas, PhotoImage, Entry, END, Scale, Checkbutton, IntVar, ttk
 from pyperclip import copy
-import tkinter as tk
-
+from UICreator import UICreator
 
 class UI:
     
@@ -12,27 +11,8 @@ class UI:
         self.ui_style = style
         self.create_widgets()
         
-    def create_button(self, root, text, command, width, row, column, sticky, columnspan):
-        button = ttk.Button(root, text=text, style="Modern.TButton", command=command, width=width)
-        button.grid(row=row, column=column, pady=10, sticky=sticky, columnspan=columnspan)
-        return button
-    
-    def create_label(self, root, text, row, column, sticky, width, columnspan):
-        label = ttk.Label(root, text=text, style="Modern.TLabel", width=width)
-        label.grid(row=row, column=column, sticky=sticky, columnspan=columnspan)
-        return label
-    
-    def create_entry(self, root, width, row, column, sticky, columnspan):
-        entry = ttk.Entry(root, width=width, style="Modern.TEntry")
-        entry.grid(row=row, column=column, sticky=sticky, columnspan=columnspan)
-        return entry
-    
-    def create_checkbutton(self, root, text, variable, command):
-        checkbutton = ttk.Checkbutton(root, text=text, variable=variable, command=command, style="Modern.TCheckbutton")
-        return checkbutton
-
     def create_slider(self, root, from_, to, orient, length, command, showvalue):
-        slider = tk.Scale(
+        slider = Scale(
             root,
             from_=from_,
             to=to,
@@ -58,42 +38,42 @@ class UI:
         canvas.grid(column=0, row=0, columnspan=3)
 
         # Labels
-        self.label_website = self.create_label(self.window, "Website:", 1, 0, "E", None, 1)
+        self.label_website = UICreator.create_label(self.window, "Website:", 1, 0, "E", None, 1)
         
-        self.label_username = self.create_label(self.window, "Email/Username:", 2, 0, "E", None, 1)
+        self.label_username = UICreator.create_label(self.window, "Email/Username:", 2, 0, "E", None, 1)
         
-        self.label_password = self.create_label(self.window, "Password:", 3, 0, "E", None, 1)
+        self.label_password = UICreator.create_label(self.window, "Password:", 3, 0, "E", None, 1)
         
-        self.label_password_strength = self.create_label(self.window, "Strength:", 4, 0, "E", None, 1)
+        self.label_password_strength = UICreator.create_label(self.window, "Strength:", 4, 0, "E", None, 1)
         self.label_password_strength.grid_forget()
         
-        self.label_password_strength_value = self.create_label(self.window, "", 4, 1, "W", 25, 1)
+        self.label_password_strength_value = UICreator.create_label(self.window, "", 4, 1, "W", 25, 1)
         self.label_password_strength_value.grid_forget()
         
-        self.label_password_length = self.create_label(self.window, "Length:", 5, 0, "E", None, 1)
+        self.label_password_length = UICreator.create_label(self.window, "Length:", 5, 0, "E", None, 1)
         self.label_password_length.grid_forget()
         
-        self.spacer = self.create_label(self.window, "", 10, 0, "W", None, 3)
+        self.spacer = UICreator.create_label(self.window, "", 10, 0, "W", None, 3)
         
+        # Dropdown to show saved sites
+        self.dropdown_sites = UICreator.create_combobox(self.window, values=[], width=30, row=1, column=1, sticky="W", columnspan=1)
+        self.dropdown_sites.bind("<<ComboboxSelected>>", self.populate_from_dropdown)
+        self.dropdown_sites.focus()
 
-        # Entries
-        self.entry_website = self.create_entry(self.window, 30, 1, 1, "W", 1)
-        self.entry_website.focus()
+        self.entry_username = UICreator.create_entry(self.window, 30, 2, 1, "W", 1)
 
-        self.entry_username = self.create_entry(self.window, 30, 2, 1, "W", 1)
-
-        self.entry_password = self.create_entry(self.window, 30, 3, 1, "W", 1)
+        self.entry_password = UICreator.create_entry(self.window, 30, 3, 1, "W", 1)
 
         # Buttons
-        self.button_search = self.create_button(root=self.window, text="Search", command=self.search_password, width=20, row=1, column=2, sticky="W", columnspan=1)
-        self.button_add = self.create_button(root=self.window, text="Add", command=self.save_password, width=60, row=11, column=0, sticky="W", columnspan=3)
+        self.button_search = UICreator.create_button(root=self.window, text="Search", command=self.search_password, width=20, row=1, column=2, sticky="W", columnspan=1)
+        self.button_add = UICreator.create_button(root=self.window, text="Add", command=self.save_password, width=60, row=11, column=0, sticky="W", columnspan=3)
         
-        self.button_generate = self.create_button(root=self.window, text="Generate Password", command=self.generate_password, width=20, row=3, column=2, sticky="W", columnspan=1)
+        self.button_generate = UICreator.create_button(root=self.window, text="Generate Password", command=self.generate_password, width=20, row=3, column=2, sticky="W", columnspan=1)
 
-        self.toggle_button = self.create_button(root=self.window, text="More Options", command=self.toggle_options, width=20, row=4, column=2, sticky="W", columnspan=1)
+        self.toggle_button = UICreator.create_button(root=self.window, text="More Options", command=self.toggle_options, width=20, row=4, column=2, sticky="W", columnspan=1)
 
-        self.button_copy_username = self.create_button(root=self.window, text="Copy Username", command=self.copy_username, width=20, row=12, column=1, sticky="E", columnspan=1)
-        self.button_copy_password = self.create_button(root=self.window, text="Copy Password", command=self.copy_password, width=20, row=12, column=2, sticky="W", columnspan=1)
+        self.button_copy_username = UICreator.create_button(root=self.window, text="Copy Username", command=self.copy_username, width=20, row=12, column=1, sticky="E", columnspan=1)
+        self.button_copy_password = UICreator.create_button(root=self.window, text="Copy Password", command=self.copy_password, width=20, row=12, column=2, sticky="W", columnspan=1)
         
         # Sliders
         self.slider_password_length = self.create_slider(self.window, from_=4, to=32, orient="horizontal", length=180, showvalue=16, command=self.on_slider_change)
@@ -104,12 +84,33 @@ class UI:
         self.use_numbers = IntVar(value=1)
         self.use_symbols = IntVar(value=1)
 
-        self.checkbutton_use_letters = self.create_checkbutton(self.window, "Use letters", self.use_letters, self.validate_checkbuttons)
-        self.checkbutton_use_numbers = self.create_checkbutton(self.window, "Use numbers", self.use_numbers, self.validate_checkbuttons)
-        self.checkbutton_use_symbols = self.create_checkbutton(self.window, "Use symbols", self.use_symbols, self.validate_checkbuttons)
+        self.checkbutton_use_letters = UICreator.create_checkbutton(self.window, "Use letters", self.use_letters, self.validate_checkbuttons)
+        self.checkbutton_use_numbers = UICreator.create_checkbutton(self.window, "Use numbers", self.use_numbers, self.validate_checkbuttons)
+        self.checkbutton_use_symbols = UICreator.create_checkbutton(self.window, "Use symbols", self.use_symbols, self.validate_checkbuttons)
 
         # Visibility
         self.options_visible = False
+        
+        self.load_sites()
+    
+    def load_sites(self):
+        """Load all saved websites into the dropdown list."""
+        sites = self.password_manager.get_all_sites()  # This should be a method in PasswordManager to retrieve site list
+        self.dropdown_sites['values'] = sites if sites else ["No sites saved"]
+        
+    def populate_from_dropdown(self, event):
+        """Populate username and password fields based on dropdown selection."""
+        selected_site = self.dropdown_sites.get()
+        if selected_site:
+            data = self.password_manager.search_password(selected_site)
+            if data:
+                self.entry_username.delete(0, END)
+                self.entry_username.insert(0, data["email"])
+                self.entry_password.delete(0, END)
+                self.entry_password.insert(0, data["password"])
+                self.password_manager.copy_password(data["password"])
+            else:
+                self.password_manager.notification_manager.show("No details for the website exist!", "red")
 
     def generate_password(self):
         max_length = self.slider_password_length.get()
@@ -122,14 +123,15 @@ class UI:
         self.password_manager.copy_password(password)
 
     def save_password(self):
-        website = self.entry_website.get().strip()
+        website = self.dropdown_sites.get().strip()
         username = self.entry_username.get().strip()
         password = self.entry_password.get().strip()
 
         if self.password_manager.save_password(website, username, password):
-            self.entry_website.delete(0, END)
+            self.dropdown_sites.delete(0, END)
             self.entry_password.delete(0, END)
             self.entry_username.delete(0, END)
+            self.load_sites()
             self.password_manager.notification_manager.show("Password saved successfully!", "green")
 
     def search_password(self):

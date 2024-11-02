@@ -1,15 +1,22 @@
 from random import choice, shuffle
 from pyperclip import copy
 from tkinter import messagebox
-import json
+from CryptoManager import CryptoManager
 
 class PasswordManager:
-    def __init__(self, notification_manager):
+    def __init__(self, notification_manager, datafile, key):
         self.notification_manager = notification_manager
         self.letters = [chr(i) for i in range(97, 123)] + [chr(i) for i in range(65, 91)]
         self.numbers = [str(i) for i in range(10)]
         self.symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
-        self.datafile = "data/data.json"
+        self.datafile = datafile
+        self.crypto_manager = CryptoManager()
+        self.key = key
+        
+        print("Password Manager initialized")
+        print(f"Datafile: {self.datafile}")
+        print(f"Key: {self.key}")
+        
 
     def generate_password(self, max_length, use_letters, use_numbers, use_symbols):
         password_list = []
@@ -45,24 +52,27 @@ class PasswordManager:
 
         if is_ok:
             new_data = {website: {"email": username, "password": password}}
-            try:
-                with open(file=self.datafile, mode="r") as saved_data:
-                    data = json.load(saved_data)
-                    data.update(new_data)
-            except FileNotFoundError:
-                with open(file=self.datafile, mode="w") as data_file:
-                    json.dump(new_data, data_file, indent=4)
-            else:
-                with open(file=self.datafile, mode="w") as data_file:
-                    json.dump(data, data_file, indent=4)
-
+            self.save_password_data(new_data)
             return True
+        
         return False
+
+    def save_password_data(self, new_data):
+        try:
+            data = self.crypto_manager.decrypt_file(self.datafile, self.key)
+            data.update(new_data)
+        except FileNotFoundError:
+            data = new_data
+        except Exception as e:
+            self.notification_manager.show(f"An error occurred: {e}", "red")
+            return
+    
+        self.crypto_manager.encrypt_file(self.datafile, data, self.key)
+                
 
     def search_password(self, website):
         try:
-            with open(file=self.datafile, mode="r") as data_file:
-                data = json.load(data_file)
+            data = self.crypto_manager.decrypt_file(self.datafile, self.key)
         except FileNotFoundError:
             self.notification_manager.show("No Data File Found!", "red")
             return None
@@ -72,3 +82,15 @@ class PasswordManager:
     def copy_password(self, password):
         copy(password)
         self.notification_manager.show("Password copied to clipboard!", "green")
+
+    def get_all_sites(self):
+        try:
+            data = self.crypto_manager.decrypt_file(self.datafile, self.key)
+            # Devuelve una lista de los sitios (claves) en los datos
+            return list(data.keys())
+        except FileNotFoundError:
+            self.notification_manager.show("No Data File Found!", "red")
+            return []
+        except Exception as e:
+            self.notification_manager.show(f"An error occurred: {e}", "red")
+            return []

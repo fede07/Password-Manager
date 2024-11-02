@@ -1,5 +1,3 @@
 data.json
 src/__pycache__/
-src/__pycache__/UI.cpython-312.pyc
-src/__pycache__/PasswordManager.cpython-312.pyc
-src/__pycache__/NotificationManager.cpython-312.pyc
+data/

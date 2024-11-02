@@ -72,3 +72,15 @@ class UIStyle:
             padding=5,
             borderwidth=0
         )
+        
+        style.configure(
+            "Modern.TCombobox",
+            fieldbackground="white",
+            background="lightblue",
+            foreground="black",
+            borderwidth=1,
+            relief="solid",
+            selectbackground="lightgray",
+            selectforeground="blue",
+            padding=(5, 5)  # Ajusta el padding vertical para aumentar la altura
+        )
