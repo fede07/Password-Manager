@@ -1,4 +1,4 @@
-from tkinter import ttk
+from tkinter import ttk, Canvas
 
 
 class UICreator:
@@ -33,3 +33,7 @@ class UICreator:
         combobox.grid(row=row, column=column, sticky=sticky, columnspan=columnspan)
         return combobox
 
+    @staticmethod
+    def create_cavas(root, width, height, bg):
+        canvas = Canvas(width=width, height=height, highlightthickness=0, bg=bg)
+        return canvas

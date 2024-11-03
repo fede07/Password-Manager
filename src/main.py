@@ -32,9 +32,7 @@ def start_manager(hash, derived_key):
 if __name__ == "__main__":
      
     login_window = Tk()
-    login_window.title("Password Manager Login")
-    login_window.geometry("300x300")
-    
-    login = Login(login_window, start_manager)
+    UIStyle(login_window)
+    Login(login_window, start_manager)
     
     login_window.mainloop()

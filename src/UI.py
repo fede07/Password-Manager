@@ -1,4 +1,4 @@
-from tkinter import Button, Label, Canvas, PhotoImage, Entry, END, Scale, Checkbutton, IntVar, ttk
+from tkinter import Canvas, PhotoImage, END, Scale, IntVar
 from pyperclip import copy
 from UICreator import UICreator
 
@@ -38,25 +38,25 @@ class UI:
         canvas.grid(column=0, row=0, columnspan=3)
 
         # Labels
-        self.label_website = UICreator.create_label(self.window, "Website:", 1, 0, "E", None, 1)
+        self.label_website = UICreator.create_label(self.window, "Sitio:", 1, 0, "E", None, 1)
         
-        self.label_username = UICreator.create_label(self.window, "Email/Username:", 2, 0, "E", None, 1)
+        self.label_username = UICreator.create_label(self.window, "Email/Usuario:", 2, 0, "E", None, 1)
         
-        self.label_password = UICreator.create_label(self.window, "Password:", 3, 0, "E", None, 1)
+        self.label_password = UICreator.create_label(self.window, "Contraseña:", 3, 0, "E", None, 1)
         
-        self.label_password_strength = UICreator.create_label(self.window, "Strength:", 4, 0, "E", None, 1)
+        self.label_password_strength = UICreator.create_label(self.window, "Fuerza:", 4, 0, "E", None, 1)
         self.label_password_strength.grid_forget()
         
         self.label_password_strength_value = UICreator.create_label(self.window, "", 4, 1, "W", 25, 1)
         self.label_password_strength_value.grid_forget()
         
-        self.label_password_length = UICreator.create_label(self.window, "Length:", 5, 0, "E", None, 1)
+        self.label_password_length = UICreator.create_label(self.window, "Largo:", 5, 0, "E", None, 1)
         self.label_password_length.grid_forget()
         
         self.spacer = UICreator.create_label(self.window, "", 10, 0, "W", None, 3)
         
         # Dropdown to show saved sites
-        self.dropdown_sites = UICreator.create_combobox(self.window, values=[], width=30, row=1, column=1, sticky="W", columnspan=1)
+        self.dropdown_sites = UICreator.create_combobox(self.window, values=[], width=28, row=1, column=1, sticky="W", columnspan=1)
         self.dropdown_sites.bind("<<ComboboxSelected>>", self.populate_from_dropdown)
         self.dropdown_sites.focus()
 
@@ -65,15 +65,15 @@ class UI:
         self.entry_password = UICreator.create_entry(self.window, 30, 3, 1, "W", 1)
 
         # Buttons
-        self.button_search = UICreator.create_button(root=self.window, text="Search", command=self.search_password, width=20, row=1, column=2, sticky="W", columnspan=1)
-        self.button_add = UICreator.create_button(root=self.window, text="Add", command=self.save_password, width=60, row=11, column=0, sticky="W", columnspan=3)
+        # self.button_search = UICreator.create_button(root=self.window, text="Search", command=self.search_password, width=20, row=1, column=2, sticky="W", columnspan=1)
+        self.button_add = UICreator.create_button(root=self.window, text="Agregar contraseña", command=self.save_password, width=60, row=11, column=0, sticky="W", columnspan=3)
         
-        self.button_generate = UICreator.create_button(root=self.window, text="Generate Password", command=self.generate_password, width=20, row=3, column=2, sticky="W", columnspan=1)
+        self.button_generate = UICreator.create_button(root=self.window, text="Generar contraseña", command=self.generate_password, width=20, row=4, column=1, sticky="W", columnspan=1)
 
-        self.toggle_button = UICreator.create_button(root=self.window, text="More Options", command=self.toggle_options, width=20, row=4, column=2, sticky="W", columnspan=1)
+        self.toggle_button = UICreator.create_button(root=self.window, text="Más Opciones", command=self.toggle_options, width=20, row=4, column=2, sticky="W", columnspan=1)
 
-        self.button_copy_username = UICreator.create_button(root=self.window, text="Copy Username", command=self.copy_username, width=20, row=12, column=1, sticky="E", columnspan=1)
-        self.button_copy_password = UICreator.create_button(root=self.window, text="Copy Password", command=self.copy_password, width=20, row=12, column=2, sticky="W", columnspan=1)
+        self.button_copy_username = UICreator.create_button(root=self.window, text="Copiar usuario", command=self.copy_username, width=20, row=2, column=2, sticky="W", columnspan=1)
+        self.button_copy_password = UICreator.create_button(root=self.window, text="Copiar contraseña", command=self.copy_password, width=20, row=3, column=2, sticky="W", columnspan=1)
         
         # Sliders
         self.slider_password_length = self.create_slider(self.window, from_=4, to=32, orient="horizontal", length=180, showvalue=16, command=self.on_slider_change)
@@ -84,9 +84,9 @@ class UI:
         self.use_numbers = IntVar(value=1)
         self.use_symbols = IntVar(value=1)
 
-        self.checkbutton_use_letters = UICreator.create_checkbutton(self.window, "Use letters", self.use_letters, self.validate_checkbuttons)
-        self.checkbutton_use_numbers = UICreator.create_checkbutton(self.window, "Use numbers", self.use_numbers, self.validate_checkbuttons)
-        self.checkbutton_use_symbols = UICreator.create_checkbutton(self.window, "Use symbols", self.use_symbols, self.validate_checkbuttons)
+        self.checkbutton_use_letters = UICreator.create_checkbutton(self.window, "Usar letras", self.use_letters, self.validate_checkbuttons)
+        self.checkbutton_use_numbers = UICreator.create_checkbutton(self.window, "Usar numeros", self.use_numbers, self.validate_checkbuttons)
+        self.checkbutton_use_symbols = UICreator.create_checkbutton(self.window, "Usar simbolos", self.use_symbols, self.validate_checkbuttons)
 
         # Visibility
         self.options_visible = False
@@ -94,9 +94,8 @@ class UI:
         self.load_sites()
     
     def load_sites(self):
-        """Load all saved websites into the dropdown list."""
-        sites = self.password_manager.get_all_sites()  # This should be a method in PasswordManager to retrieve site list
-        self.dropdown_sites['values'] = sites if sites else ["No sites saved"]
+        sites = self.password_manager.get_all_sites()
+        self.dropdown_sites['values'] = sites if sites else ["No hay sitios guardados"]
         
     def populate_from_dropdown(self, event):
         """Populate username and password fields based on dropdown selection."""
@@ -110,7 +109,7 @@ class UI:
                 self.entry_password.insert(0, data["password"])
                 self.password_manager.copy_password(data["password"])
             else:
-                self.password_manager.notification_manager.show("No details for the website exist!", "red")
+                self.password_manager.notification_manager.show("No existen detalles para ese sitio!", "red")
 
     def generate_password(self):
         max_length = self.slider_password_length.get()
@@ -132,7 +131,7 @@ class UI:
             self.entry_password.delete(0, END)
             self.entry_username.delete(0, END)
             self.load_sites()
-            self.password_manager.notification_manager.show("Password saved successfully!", "green")
+            self.password_manager.notification_manager.show("Contraseña guardada correctamente!", "green")
 
     def search_password(self):
         website = self.entry_website.get()
@@ -145,7 +144,7 @@ class UI:
             self.entry_password.insert(0, data["password"])
             self.password_manager.copy_password(data["password"])
         else:
-            self.password_manager.notification_manager.show("No details for the website exist!", "red")
+            self.password_manager.notification_manager.show("No existen detalles para ese sitio!", "red")
 
     def validate_checkbuttons(self):
         selected_options = sum([self.use_letters.get(), self.use_numbers.get(), self.use_symbols.get()])
@@ -165,13 +164,13 @@ class UI:
         self.options_visible = not self.options_visible
         if self.options_visible:
             self.toggle_button.config(text="Less Options")
-            self.checkbutton_use_letters.grid(column=1, row=7, sticky="W")
-            self.checkbutton_use_numbers.grid(column=1, row=8, sticky="W")
-            self.checkbutton_use_symbols.grid(column=1, row=9, sticky="W")
-            self.label_password_length.grid(column=0, row=5, sticky="E")
-            self.slider_password_length.grid(column=1, row=5, sticky="W")
-            self.label_password_strength.grid(column=0, row=4, sticky="E")
-            self.label_password_strength_value.grid(column=1, row=4)
+            self.checkbutton_use_letters.grid(column=1, row=8, sticky="W")
+            self.checkbutton_use_numbers.grid(column=1, row=9, sticky="W")
+            self.checkbutton_use_symbols.grid(column=1, row=10, sticky="W")
+            self.label_password_length.grid(column=0, row=6, sticky="E")
+            self.slider_password_length.grid(column=1, row=6, sticky="W")
+            self.label_password_strength.grid(column=0, row=5, sticky="E")
+            self.label_password_strength_value.grid(column=1, row=5)
         else:
             self.toggle_button.config(text="More Options")
             self.checkbutton_use_letters.grid_forget()
@@ -183,10 +182,9 @@ class UI:
             self.label_password_strength_value.grid_forget()
             
             
-            
     def on_slider_change(self, value):
-        strenght = ["Weak", "Medium", "Strong", "Very Strong"]
-        strenght_colors = ["red", "orange", "green", "light blue"]
+        strenght = ["Debil", "Medio", "Fuerte", "Muy Fuerte"]
+        strenght_colors = ["red", "orange", "green", "#2c69db"]
         
         value = int(value)
         
@@ -201,9 +199,9 @@ class UI:
             
     def copy_to_clipboard(self, content, content_type):
         if content == "":
-            self.password_manager.notification_manager.show(f"No {content_type} to copy!", "red")
+            self.password_manager.notification_manager.show(f"No {content_type} para copiar!", "red")
             return
-        self.password_manager.notification_manager.show(f"{content_type.capitalize()} copied to clipboard!", "green")
+        self.password_manager.notification_manager.show(f"{content_type.capitalize()} copiado al clipboard!", "green")
         copy(content)
 
     def copy_username(self):
