@@ -31,12 +31,18 @@ class CryptoManager:
     @staticmethod    
     def decrypt_file(file, key):
         fernet = Fernet(key)
-        with open(file, "rb") as file:
-            encrypted_data = file.read()
-        decrypted_data = fernet.decrypt(encrypted_data)
+        try:
+            with open(file, "rb") as file:
+                encrypted_data = file.read()
+            try:
+                decrypted_data = fernet.decrypt(encrypted_data)
+            except:
+                return None
+        except FileNotFoundError:
+            return None
         return json.loads(decrypted_data.decode())
     
     @staticmethod
-    def generate_hash(user, password):
-        hash = hashlib.sha256("f{user}{password}".encode()).hexdigest()
+    def generate_hash(user):
+        hash = hashlib.sha256(f"{user}".encode()).hexdigest()
         return hash
