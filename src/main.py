@@ -6,10 +6,6 @@ from Login import Login
 
 def start_manager(hash, derived_key):
     
-    # print("Starting Password Manager")
-    # print(f"Hash: {hash}")
-    # print(f"Derived Key: {derived_key}")
-    
     window = Tk()
     window.title("Password Manager")
     window.iconbitmap("assets/icon.ico")
