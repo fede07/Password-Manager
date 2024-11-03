@@ -118,9 +118,6 @@ class UI:
         self.entry_password.delete(0, END)
         self.entry_password.insert(0, password)
 
-        # Copiar la contraseña al portapapeles
-        self.password_manager.copy_password(password)
-
     def save_password(self):
         website = self.dropdown_sites.get().strip()
         username = self.entry_username.get().strip()
@@ -159,11 +156,13 @@ class UI:
             self.checkbutton_use_letters.config(state="normal")
             self.checkbutton_use_numbers.config(state="normal")
             self.checkbutton_use_symbols.config(state="normal")
+            
+        self.on_slider_change(self.slider_password_length.get())
 
     def toggle_options(self):
         self.options_visible = not self.options_visible
         if self.options_visible:
-            self.toggle_button.config(text="Less Options")
+            self.toggle_button.config(text="Menos opciones")
             self.checkbutton_use_letters.grid(column=1, row=8, sticky="W")
             self.checkbutton_use_numbers.grid(column=1, row=9, sticky="W")
             self.checkbutton_use_symbols.grid(column=1, row=10, sticky="W")
@@ -172,7 +171,7 @@ class UI:
             self.label_password_strength.grid(column=0, row=5, sticky="E")
             self.label_password_strength_value.grid(column=1, row=5)
         else:
-            self.toggle_button.config(text="More Options")
+            self.toggle_button.config(text="Más opciones")
             self.checkbutton_use_letters.grid_forget()
             self.checkbutton_use_numbers.grid_forget()
             self.checkbutton_use_symbols.grid_forget()
@@ -188,11 +187,20 @@ class UI:
         
         value = int(value)
         
-        if value <= 6:
+        self.generate_password()
+        
+        if self.use_letters.get() == 1:
+            value += 1
+        if self.use_numbers.get() == 1:
+            value += 1
+        if self.use_symbols.get() == 1:
+            value += 1
+        
+        if value <= 7:
             self.label_password_strength_value.config(text=strenght[0], foreground="white", font=("Arial", 10, "bold"), background=strenght_colors[0])
-        elif value <= 10:
+        elif value <= 11:
             self.label_password_strength_value.config(text=strenght[1], foreground="white", font=("Arial", 10, "bold"), background=strenght_colors[1])
-        elif value < 16:
+        elif value < 17:
             self.label_password_strength_value.config(text=strenght[2], foreground="white", font=("Arial", 10, "bold"), background=strenght_colors[2])
         else:
             self.label_password_strength_value.config(text=strenght[3], foreground="white", font=("Arial", 10, "bold"), background=strenght_colors[3])

@@ -13,9 +13,9 @@ class PasswordManager:
         self.crypto_manager = CryptoManager()
         self.key = key
         
-        print("Password Manager initialized")
-        print(f"Datafile: {self.datafile}")
-        print(f"Key: {self.key}")
+        # print("Password Manager initialized")
+        # print(f"Datafile: {self.datafile}")
+        # print(f"Key: {self.key}")
         
 
     def generate_password(self, max_length, use_letters, use_numbers, use_symbols):
@@ -45,10 +45,10 @@ class PasswordManager:
 
     def save_password(self, website, username, password):
         if len(website) == 0 or len(username) == 0 or len(password) == 0:
-            self.notification_manager.show("Please fill in all the fields!", "red")
+            self.notification_manager.show("Por favor llenar todos los campos!", "red")
             return
 
-        is_ok = messagebox.askokcancel(title=website, message=f"Are these details correct?\nUsername: {username}\nPassword: {password}\n")
+        is_ok = messagebox.askokcancel(title=website, message=f"Son estos datos correctos?\nUsuario: {username}\nContraseña: {password}\n")
 
         if is_ok:
             new_data = {website: {"email": username, "password": password}}
@@ -64,7 +64,7 @@ class PasswordManager:
         except FileNotFoundError:
             data = new_data
         except Exception as e:
-            self.notification_manager.show(f"An error occurred: {e}", "red")
+            self.notification_manager.show(f"Error: {e}", "red")
             return
     
         self.crypto_manager.encrypt_file(self.datafile, data, self.key)
@@ -74,14 +74,14 @@ class PasswordManager:
         try:
             data = self.crypto_manager.decrypt_file(self.datafile, self.key)
         except FileNotFoundError:
-            self.notification_manager.show("No Data File Found!", "red")
+            self.notification_manager.show("Archivo no encontrado!", "red")
             return None
         else:
             return data.get(website)
 
     def copy_password(self, password):
         copy(password)
-        self.notification_manager.show("Password copied to clipboard!", "green")
+        self.notification_manager.show("Contraseña copiada!", "green")
 
     def get_all_sites(self):
         try:
@@ -89,8 +89,8 @@ class PasswordManager:
             # Devuelve una lista de los sitios (claves) en los datos
             return list(data.keys())
         except FileNotFoundError:
-            self.notification_manager.show("No Data File Found!", "red")
+            self.notification_manager.show("Archivo no encontrado!", "red")
             return []
         except Exception as e:
-            self.notification_manager.show(f"An error occurred: {e}", "red")
+            self.notification_manager.show(f"Error: {e}", "red")
             return []

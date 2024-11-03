@@ -56,9 +56,9 @@ class Login:
         password = self.password_entry.get()
         
         #TESTING
-        print("-----------------TESTING HABILITADO-----------------")
-        username = "TestUser"
-        password = "1234"
+        # print("-----------------TESTING HABILITADO-----------------")
+        # username = "TestUser"
+        # password = "1234"
         
         self.derived_key = CryptoManager.derive_key(password, username)
         self.hash = CryptoManager.generate_hash(username, password)
