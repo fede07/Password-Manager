@@ -1,4 +1,4 @@
-from tkinter import Canvas, PhotoImage, END, Scale, IntVar
+from tkinter import Canvas, PhotoImage, END, Scale, IntVar, messagebox
 from pyperclip import copy
 from UICreator import UICreator
 from NotificationManager import NotificationManager
@@ -74,14 +74,16 @@ class UI:
 
         # Buttons
         # self.button_search = UICreator.create_button(root=self.window, text="Search", command=self.search_password, width=20, row=1, column=2, sticky="W", columnspan=1)
-        self.button_add = UICreator.create_button(root=self.window, text="Agregar contraseña", command=self.save_password, width=60, row=12, column=0, sticky="W", columnspan=3)
+        self.button_add = UICreator.create_button(root=self.window, text="Agregar contraseña", command=self.save_password, width=20, row=12, column=0, sticky="N", columnspan=1)
+        self.button_modify = UICreator.create_button(root=self.window, text="Modificar contraseña", command=self.save_password, width=20, row=12, column=1, sticky="N", columnspan=1)
+        self.button_delete = UICreator.create_button(root=self.window, text="Eliminar contraseña", command=self.delete_password, width=20, row=12, column=2, sticky="N", columnspan=1)
         
-        self.button_generate = UICreator.create_button(root=self.window, text="Generar contraseña", command=self.generate_password, width=20, row=5, column=1, sticky="W", columnspan=1)
+        self.button_generate = UICreator.create_button(root=self.window, text="Generar contraseña", command=self.generate_password, width=20, row=5, column=1, sticky="N", columnspan=1)
 
-        self.toggle_button = UICreator.create_button(root=self.window, text="Más Opciones", command=self.toggle_options, width=20, row=5, column=2, sticky="W", columnspan=1)
+        self.toggle_button = UICreator.create_button(root=self.window, text="Más Opciones", command=self.toggle_options, width=20, row=5, column=2, sticky="N", columnspan=1)
 
-        self.button_copy_username = UICreator.create_button(root=self.window, text="Copiar usuario", command=self.copy_username, width=20, row=2, column=2, sticky="W", columnspan=1)
-        self.button_copy_password = UICreator.create_button(root=self.window, text="Copiar contraseña", command=self.copy_password, width=20, row=3, column=2, sticky="W", columnspan=1)
+        self.button_copy_username = UICreator.create_button(root=self.window, text="Copiar usuario", command=self.copy_username, width=20, row=2, column=2, sticky="N", columnspan=1)
+        self.button_copy_password = UICreator.create_button(root=self.window, text="Copiar contraseña", command=self.copy_password, width=20, row=3, column=2, sticky="N", columnspan=1)
         
         # Sliders
         self.slider_password_length = self.create_slider(self.window, from_=4, to=32, orient="horizontal", length=180, showvalue=16, command=self.on_slider_change)
@@ -132,16 +134,45 @@ class UI:
         self.entry_password.insert(0, password)
 
     def save_password(self):
+        website, username, password = self.fetch_site_details()
+
+        if self.password_manager.save_password(website, username, password):
+            self.clear_input_fields()
+            self.load_sites()
+            self.password_manager.notification_manager.show("Contraseña guardada correctamente!", "green")
+            
+    def modify_password(self):
+        website, username, password = self.fetch_site_details()
+
+        if self.password_manager.modify_password(website, username, password) is None:
+            self.clear_input_fields()
+            self.password_manager.notification_manager.show("Contraseña modificada correctamente!", "green")
+            
+    def delete_password(self):
+        website = self.dropdown_sites.get()
+        
+        is_ok = messagebox.askokcancel(f"Eliminar {website}?", f"Esta seguro que desea eliminar el sitio {website}?")
+        
+        if not is_ok:
+            return
+        
+        if self.password_manager.delete_password(website) is None:
+            self.clear_input_fields()
+            self.load_sites()
+            self.password_manager.notification_manager.show("Contraseña eliminada correctamente!", "green")
+    
+
+    def clear_input_fields(self):
+        self.dropdown_sites.delete(0, END)
+        self.entry_password.delete(0, END)
+        self.entry_username.delete(0, END)
+        self.load_sites()
+
+    def fetch_site_details(self):
         website = self.dropdown_sites.get().strip()
         username = self.entry_username.get().strip()
         password = self.entry_password.get().strip()
-
-        if self.password_manager.save_password(website, username, password):
-            self.dropdown_sites.delete(0, END)
-            self.entry_password.delete(0, END)
-            self.entry_username.delete(0, END)
-            self.load_sites()
-            self.password_manager.notification_manager.show("Contraseña guardada correctamente!", "green")
+        return website,username,password
 
     def search_password(self):
         website = self.entry_website.get()

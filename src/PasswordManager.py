@@ -64,11 +64,24 @@ class PasswordManager:
         except FileNotFoundError:
             data = new_data
         except Exception as e:
-            self.notification_manager.show(f"Error: {e}", "red")
-            return
-    
+            return e
         self.crypto_manager.encrypt_file(self.datafile, data, self.key)
+        return None
                 
+    def modify_password(self, website, username, password):
+        new_data = {website: {"email": username, "password": password}}
+        self.save_password_data(new_data)
+        
+        
+    def delete_password(self, website):
+        try:
+            data = self.crypto_manager.decrypt_file(self.datafile, self.key)
+            data.pop(website)
+            self.crypto_manager.encrypt_file(self.datafile, data, self.key)
+        except Exception as e:
+            return e
+        else:
+            return None
 
     def search_password(self, website):
         try:
