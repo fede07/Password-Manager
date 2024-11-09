@@ -52,26 +52,40 @@ class PasswordManager:
 
         if is_ok:
             new_data = {website: {"email": username, "password": password}}
-            self.save_password_data(new_data)
-            return True
+            if self.save_password_data(new_data):
+                return True
         
         return False
 
     def save_password_data(self, new_data):
         try:
             data = self.crypto_manager.decrypt_file(self.datafile, self.key)
-            data.update(new_data)
         except FileNotFoundError:
-            data = new_data
-        except Exception as e:
-            return e
+            data = {}
+        
+        #verificar si los datos ya existen
+        for key in new_data:
+            print(f"Key: {key}")
+            if key in data:
+                self.notification_manager.show(f"El sitio {key} ya existe!", "red")
+                print(f"El sitio {key} ya existe!")
+                return False
+        
+        data.update(new_data)
         self.crypto_manager.encrypt_file(self.datafile, data, self.key)
-        return None
+        return True
                 
     def modify_password(self, website, username, password):
         new_data = {website: {"email": username, "password": password}}
-        self.save_password_data(new_data)
+        try:
+            data = self.crypto_manager.decrypt_file(self.datafile, self.key)
+        except FileNotFoundError:
+            return False
         
+        data.update(new_data)
+        self.crypto_manager.encrypt_file(self.datafile, data, self.key)
+        return True
+
         
     def delete_password(self, website):
         try:

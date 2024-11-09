@@ -91,7 +91,7 @@ class UI:
         # Buttons
         # self.button_search = UICreator.create_button(root=self.window, text="Search", command=self.search_password, width=20, row=1, column=2, sticky="W", columnspan=1)
         self.button_add = UICreator.create_button(root=self.window, text="Agregar contraseña", command=self.save_password, width=20, row=12, column=0, sticky="N", columnspan=1)
-        self.button_modify = UICreator.create_button(root=self.window, text="Modificar contraseña", command=self.save_password, width=20, row=12, column=1, sticky="N", columnspan=1)
+        self.button_modify = UICreator.create_button(root=self.window, text="Modificar contraseña", command=self.modify_password, width=20, row=12, column=1, sticky="N", columnspan=1)
         self.button_delete = UICreator.create_button(root=self.window, text="Eliminar contraseña", command=self.delete_password, width=20, row=12, column=2, sticky="N", columnspan=1)
         
         self.button_generate = UICreator.create_button(root=self.window, text="Generar contraseña", command=self.generate_password, width=20, row=5, column=1, sticky="N", columnspan=1)
@@ -152,20 +152,32 @@ class UI:
     def save_password(self):
         website, username, password = self.fetch_site_details()
 
-        if self.password_manager.save_password(website, username, password):
+        result = self.password_manager.save_password(website, username, password)
+
+        if result:
             self.clear_input_fields()
             self.load_sites()
             self.password_manager.notification_manager.show("Contraseña guardada correctamente!", "green")
+        else:
+            self.password_manager.notification_manager.show("El sitio ya existe!", "red")
             
     def modify_password(self):
         website, username, password = self.fetch_site_details()
+        
+        if website == "" or username == "" or password == "":
+            self.password_manager.notification_manager.show("Por favor complete todos los campos!", "red")
+            return
 
-        if self.password_manager.modify_password(website, username, password) is None:
+        if self.password_manager.modify_password(website, username, password):
             self.clear_input_fields()
             self.password_manager.notification_manager.show("Contraseña modificada correctamente!", "green")
             
     def delete_password(self):
         website = self.dropdown_sites.get()
+        
+        if website == "":
+            self.password_manager.notification_manager.show("Por favor seleccione un sitio!", "red")
+            return
         
         is_ok = messagebox.askokcancel(f"Eliminar {website}?", f"Esta seguro que desea eliminar el sitio {website}?")
         
