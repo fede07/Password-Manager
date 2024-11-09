@@ -4,6 +4,9 @@ from UI import UI
 from UIStyle import UIStyle
 from Login import Login
 
+WIDTH = 600
+HEIGHT = 600
+
 def start_manager(hash, derived_key):
     
     window = Tk()

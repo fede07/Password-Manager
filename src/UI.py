@@ -3,6 +3,11 @@ from pyperclip import copy
 from UICreator import UICreator
 from NotificationManager import NotificationManager
 
+WIDTH = 600
+HEIGHT = 520
+
+EXTRA_HEIGHT = 120
+
 class UI:
     
     def __init__(self, window, password_manager, style):
@@ -32,7 +37,18 @@ class UI:
     def create_widgets(self):
         self.window.title("Password Manager")
         self.window.config(padx=20, pady=20)
-        self.window.minsize(width=480, height=420)
+        self.window.minsize(width=WIDTH, height=HEIGHT)
+        self.window.resizable(False, False)
+        
+        # Centrar la ventana en la pantalla
+        window_width = WIDTH
+        window_height = HEIGHT
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+        position_x = (screen_width - window_width) // 2
+        position_y = (screen_height - window_height) // 2
+        window_size = f"{window_width}x{window_height}+{position_x}+{position_y}"
+        self.window.geometry(window_size)
 
         canvas = Canvas(width=200, height=200, highlightthickness=0, bg=self.ui_style.bg_color)
         canvas.create_image(100, 100, image=self.logo_img)
@@ -214,6 +230,7 @@ class UI:
             self.slider_password_length.grid(column=1, row=7, sticky="W")
             self.label_password_strength.grid(column=0, row=6, sticky="E")
             self.label_password_strength_value.grid(column=1, row=6)
+            self.resize_and_center(new_width=WIDTH, new_height=HEIGHT + EXTRA_HEIGHT)
         else:
             self.toggle_button.config(text="Más opciones")
             self.checkbutton_use_letters.grid_forget()
@@ -223,6 +240,7 @@ class UI:
             self.slider_password_length.grid_forget()
             self.label_password_strength.grid_forget()
             self.label_password_strength_value.grid_forget()
+            self.resize_and_center(new_width=WIDTH, new_height=HEIGHT)
             
             
     def on_slider_change(self, value):
@@ -269,3 +287,10 @@ class UI:
             self.entry_password.config(show="*")
         else:
             self.entry_password.config(show="")
+            
+    def resize_and_center(self, new_width, new_height):
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+        position_x = (screen_width - new_width) // 2
+        position_y = (screen_height - new_height) // 2
+        self.window.geometry(f"{new_width}x{new_height}+{position_x}+{position_y}")

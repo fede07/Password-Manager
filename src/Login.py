@@ -17,6 +17,15 @@ class Login:
         self.root.title("Password Manager Login")
         self.root.geometry("400x480")
         self.root.resizable(False, False)
+        
+        # Centrar la ventana en la pantalla
+        window_width = 400
+        window_height = 480
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        position_x = (screen_width - window_width) // 2
+        position_y = (screen_height - window_height) // 2
+        self.root.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
 
         # Configura las columnas y filas de la raíz para expandirse
         self.root.grid_rowconfigure(0, weight=1)
