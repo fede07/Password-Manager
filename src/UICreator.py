@@ -6,7 +6,7 @@ class UICreator:
     @staticmethod
     def create_button(root, text, command, width, row, column, sticky, columnspan):
         button = ttk.Button(root, text=text, style="Modern.TButton", command=command, width=width)
-        button.grid(row=row, column=column, pady=10, sticky=sticky, columnspan=columnspan)
+        button.grid(row=row, column=column, sticky=sticky, columnspan=columnspan, pady=(5, 5))
         return button
     
     @staticmethod
@@ -18,7 +18,7 @@ class UICreator:
     @staticmethod
     def create_entry(root, width, row, column, sticky, columnspan):
         entry = ttk.Entry(root, width=width, style="Modern.TEntry")
-        entry.grid(row=row, column=column, sticky=sticky, columnspan=columnspan)
+        entry.grid(row=row, column=column, sticky=sticky, columnspan=columnspan, pady=(0, 0))
         return entry
     
     @staticmethod
