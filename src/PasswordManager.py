@@ -82,6 +82,9 @@ class PasswordManager:
         except FileNotFoundError:
             return False
         
+        if website not in data:
+            return False
+        
         data.update(new_data)
         self.crypto_manager.encrypt_file(self.datafile, data, self.key)
         return True
@@ -90,12 +93,15 @@ class PasswordManager:
     def delete_password(self, website):
         try:
             data = self.crypto_manager.decrypt_file(self.datafile, self.key)
+        except:
+            return False
+
+        if website in data:
             data.pop(website)
             self.crypto_manager.encrypt_file(self.datafile, data, self.key)
-        except Exception as e:
-            return e
-        else:
-            return None
+            return True
+        
+        return False
 
     def search_password(self, website):
         try:

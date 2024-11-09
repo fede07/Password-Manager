@@ -151,6 +151,10 @@ class UI:
 
     def save_password(self):
         website, username, password = self.fetch_site_details()
+        
+        if website == "" or username == "" or password == "":
+            self.password_manager.notification_manager.show("Por favor complete todos los campos!", "red")
+            return
 
         result = self.password_manager.save_password(website, username, password)
 
@@ -171,6 +175,9 @@ class UI:
         if self.password_manager.modify_password(website, username, password):
             self.clear_input_fields()
             self.password_manager.notification_manager.show("Contraseña modificada correctamente!", "green")
+        else:
+            self.password_manager.notification_manager.show("No se pudo modificar la contraseña o no existe el sitio!", "red")
+        
             
     def delete_password(self):
         website = self.dropdown_sites.get()
@@ -184,10 +191,12 @@ class UI:
         if not is_ok:
             return
         
-        if self.password_manager.delete_password(website) is None:
+        if self.password_manager.delete_password(website):
             self.clear_input_fields()
             self.load_sites()
             self.password_manager.notification_manager.show("Contraseña eliminada correctamente!", "green")
+        else:
+            self.password_manager.notification_manager.show("No se pudo eliminar la contraseña o no existe el sitio!", "red")
     
 
     def clear_input_fields(self):
