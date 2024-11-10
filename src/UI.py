@@ -155,6 +155,10 @@ class UI:
         if website == "" or username == "" or password == "":
             self.password_manager.notification_manager.show("Por favor complete todos los campos!", "red")
             return
+        
+        is_ok = messagebox.askokcancel(title=website, message=f"Son estos datos correctos?\nUsuario: {username}\nContraseña: {password}\n")
+        if not is_ok:
+            return
 
         result = self.password_manager.save_password(website, username, password)
 
@@ -170,6 +174,11 @@ class UI:
         
         if website == "" or username == "" or password == "":
             self.password_manager.notification_manager.show("Por favor complete todos los campos!", "red")
+            return
+        
+        is_ok = messagebox.askokcancel(title=website, message=f"Son estos datos correctos?\nUsuario: {username}\nContraseña: {password}\n")
+        
+        if not is_ok:
             return
 
         if self.password_manager.modify_password(website, username, password):

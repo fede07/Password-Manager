@@ -44,16 +44,10 @@ class PasswordManager:
         return ''.join(password_list)
 
     def save_password(self, website, username, password):
-        if len(website) == 0 or len(username) == 0 or len(password) == 0:
-            self.notification_manager.show("Por favor llenar todos los campos!", "red")
-            return
 
-        is_ok = messagebox.askokcancel(title=website, message=f"Son estos datos correctos?\nUsuario: {username}\nContraseña: {password}\n")
-
-        if is_ok:
-            new_data = {website: {"email": username, "password": password}}
-            if self.save_password_data(new_data):
-                return True
+        new_data = {website: {"email": username, "password": password}}
+        if self.save_password_data(new_data):
+            return True
         
         return False
 
@@ -77,6 +71,7 @@ class PasswordManager:
                 
     def modify_password(self, website, username, password):
         new_data = {website: {"email": username, "password": password}}
+        
         try:
             data = self.crypto_manager.decrypt_file(self.datafile, self.key)
         except FileNotFoundError:
