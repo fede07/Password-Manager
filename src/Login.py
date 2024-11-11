@@ -99,6 +99,8 @@ class Login:
         self.show_password_checkbutton.grid(row=4, column=2, sticky="n")
         self.acept_register_button.grid(column=1, row=5, columnspan=2, sticky="n")
         self.cancel_button.grid(column=1, row=6, columnspan=2, sticky="n")
+        
+        self.username_entry.focus()
             
     def cancel(self):
         # Oculta campos y botones de registro
@@ -117,6 +119,8 @@ class Login:
         self.password_entry.delete(0, tk.END)
         self.repeat_password_entry.delete(0, tk.END)
         self.notification_label.config(text="")
+        
+        self.username_entry.focus()
                         
     def login(self):
         
@@ -131,10 +135,16 @@ class Login:
             self.on_success(self.hash, self.derived_key)
         else:
             self.show("Credenciales incorrectas", "red")
+            self.password_entry.delete(0, tk.END)
+            self.password_entry.focus()
 
     def check_empty_fields(self, username, password):
         if len(username) == 0 or len(password) == 0:
             self.show("Por favor llenar todos los campos", "red")
+            if len(username) == 0:
+                self.username_entry.focus()
+            elif len(password) == 0:
+                self.password_entry.focus()
             return True
         return False
             
